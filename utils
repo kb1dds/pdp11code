@@ -1,0 +1,42 @@
+; Assorted standalone PDP-11 utilities
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+; Checkout for line-time clock
+; Entry point = 001016
+; Setup: none
+
+000100 001000  ; Vector for line-time clock
+000102 000340
+
+; Interrupt handler
+001000 005201 ;INC R1
+001002 020127 ;CMP R1,#74
+001004 000074 
+001006 002402 ;BLT 001014
+001010 005001 ;CLR R1
+001012 005200 ;INC R0
+001014 000002 ;RTI
+
+; Main Program
+001016 005000 ;CLR R0
+001020 005002 ;CLR R2
+001022 012706 ;MOV #770,R6
+001024 000770 
+001026 005037 ;CLR PSW
+001030 177776
+001032 012737 ;MOV #100,CLK_CSR
+001034 000100
+001036 177546 
+001040 000777 ;BR 001040
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+; Ingest memory contents from serial line
+; Entry point = 000600
+; Setup: (R2) = start point for read
+
+000600 105737 ;TSTB @#177560
+000602 177560
+000604 100375 ;BPL 000600
+000606 113722 ;MOVB @#177562,(R2)+
+000610 177562
+000612 000772 ;BR 000600
