@@ -11,7 +11,7 @@ A light chaser program for the pdp-11/45 that displays prime numbers.
 Another library of useful utilities, this intended for the EMON monitor below.
 
 ## emon
-An interactive serial monitor.  Load `coredump` first, then this.  Set the stack pointer R6 to `000770`, and then start execution from `001200`.  The monitor expects a DL11 serial console at the usual address `177560`.  
+An interactive serial monitor.  Load `coredump` first, then this, or load `emon_bundle` which contains everything you need.  Set the stack pointer R6 to `000770`, and then start execution from `001200`.  The monitor expects a DL11 serial console at the usual address `177560`.  
 
 The EMON monitor is set up with five commands:
 1. `LIST`, which lists the commands
