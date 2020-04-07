@@ -7,6 +7,9 @@ A library of useful utilities for various things.
 ## primes
 A light chaser program for the pdp-11/45 that displays prime numbers.
 
+## lfsr
+A light chaser program for the pdp-11/45 that displays the contents of a linear feedback shift register.  Set the switches to select bits to be accumulated for feedback.  Uses the line time clock (LTC) interrupt to signal display updates.
+
 ## coredump
 Another library of useful utilities, this intended for the EMON monitor below.
 

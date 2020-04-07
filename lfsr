@@ -1,0 +1,48 @@
+; Linear feedback shift register light chaser
+;
+; Updates triggered by LTC
+; Load start address = 001000
+; Set switches to be nonzero
+; Then start!
+
+; Set up LTC interrupt handler
+000100 000400
+000102 000300
+
+; LTC interrupt handler
+000400 005001 ; R1 = accumulator
+000402 013700 ; R0 = current shift register state
+000404 000500
+000406 012702 ; R2 = switch scan register
+000410 000001
+000412 013703 ; R3 = switch register
+000414 177570
+000416 030203 ; Is current switch bit set?
+000420 001403 ; If not, skip to 000430
+000422 030200 ; Is current shift register bit set?
+000424 001401 ; If not, skip
+000426 005201 ; Accumulate shift register bit
+000430 006102 ; Next bit!
+000432 103371 ; End of bits?  If not, go to 000416
+000434 000241 ; Clear carry (input to shift register)
+000436 032701 ; Check parity of accumulator
+000440 000001
+000442 001401 
+000444 000261 ; Set carry if accumulator is 1
+000446 006000 ; Rotate shift register
+000450 010037 ; Store the result...
+000452 000500 ; ... in 000500
+000454 010037 
+000456 177570 ; ... in display register
+000460 000002 ; done with handler!
+
+; Shift register global variable
+000500 100000 ; Starting shift register value
+
+; Main program
+001000 012706   ; Set up stack
+001002 002000
+001004 012737   ; Enable LTC
+001006 000300
+001010 177546
+001012 000777   ; Idle loop
