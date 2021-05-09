@@ -1,0 +1,108 @@
+;; Self correcting code
+
+; Load this code into 001000-001102 and 002000-002102
+; Set R0=001000, R2=002000, R3=003000, start at 001000
+
+; ECC computation
+001000 111003 ; Start: MOVB(R0),R3 ; R3=A
+001002 111104 ;        MOVB(R1),R4 ; R3=A,  R4=B
+001004 005104 ;        COM R4      ; R3=A,  R4=!B
+001006 040403 ;        BIC R4,R3   ; R3=AB, R4=!B
+
+001010 111205 ;        MOVB(R2),R5 ; R3=AB, R4=!B, R5=C 
+001012 040405 ;        BIC R4,R5   ; R3=AB, R4=!B, R5=BC 
+001014 050503 ;        BIS R5,R3   ; R3=AB+BC, R4=!B, R5=BC
+
+001016 111004 ;        MOVB(R0),R4 ; R3=AB+BC, R4=A, R5=BC 
+001020 005104 ;        COM R4      ; R3=AB+BC, R4=!A, R5=BC 
+001022 111205 ;        MOVB(R2),R5 ; R3=AB+BC, R4=!A, R5=C 
+001024 040405 ;        BIC R4,R5   ; R3=AB+BC, R4=!A, R5=AC 
+001026 050503 ;        BIS R5,R3   ; R3=AB+BC+AC
+
+; Use ECC to correct all three copies
+001030 110310 ;        MOVB R3,(R0)
+001032 110311 ;        MOVB R3,(R1)
+001034 110312 ;        MOVB R3,(R2)
+
+; Move pointer to next address
+001036 005200 ;        INC R0
+001040 005201 ;        INC R1
+001042 005202 ;        INC R2
+
+; Bounds checking and iteration
+001044 010703 ;        MOV PC,R3
+001046 062703 ;        ADD #36,R3
+001050 000036 
+001052 020300 ;        CMP R3,R0
+001054 001351 ;        BNE Start
+
+; ECC sweep of code completed.
+; Prepare for next iteration
+001056 162700 ;        SUB #104,R0
+001060 000104         
+001062 162701 ;        SUB #104,R1
+001064 000104 
+001066 162702 ;        SUB #104,R2
+001070 000104
+
+; Cyclic permute pointers betwee the three copies
+001072 010003 ;        MOV R0,R3
+001074 010100 ;        MOV R1,R0
+001076 010201 ;        MOV R2,R1
+001100 010302 ;        MOV R3,R2
+
+; Jump to next copy
+001102 010007 ;        MOV R0,PC
+
+
+;;; Duplicate copy
+; ECC computation
+002000 111003 ; Start: MOVB(R0),R3 ; R3=A
+002002 111104 ;        MOVB(R1),R4 ; R3=A,  R4=B
+002004 005104 ;        COM R4      ; R3=A,  R4=!B
+002006 040403 ;        BIC R4,R3   ; R3=AB, R4=!B
+
+002010 111205 ;        MOVB(R2),R5 ; R3=AB, R4=!B, R5=C 
+002012 040405 ;        BIC R4,R5   ; R3=AB, R4=!B, R5=BC 
+002014 050503 ;        BIS R5,R3   ; R3=AB+BC, R4=!B, R5=BC
+
+002016 111004 ;        MOVB(R0),R4 ; R3=AB+BC, R4=A, R5=BC 
+002020 005104 ;        COM R4      ; R3=AB+BC, R4=!A, R5=BC 
+002022 111205 ;        MOVB(R2),R5 ; R3=AB+BC, R4=!A, R5=C 
+002024 040405 ;        BIC R4,R5   ; R3=AB+BC, R4=!A, R5=AC 
+002026 050503 ;        BIS R5,R3   ; R3=AB+BC+AC
+
+; Use ECC to correct all three copies
+002030 110310 ;        MOVB R3,(R0)
+002032 110311 ;        MOVB R3,(R1)
+002034 110312 ;        MOVB R3,(R2)
+
+; Move pointer to next address
+002036 005200 ;        INC R0
+002040 005201 ;        INC R1
+002042 005202 ;        INC R2
+
+; Bounds checking and iteration
+002044 010703 ;        MOV PC,R3
+002046 062703 ;        ADD #36,R3
+002050 000036 
+002052 020300 ;        CMP R3,R0
+002054 001351 ;        BNE Start
+
+; ECC sweep of code completed.
+; Prepare for next iteration
+002056 162700 ;        SUB #104,R0
+002060 000104         
+002062 162701 ;        SUB #104,R1
+002064 000104 
+002066 162702 ;        SUB #104,R2
+002070 000104
+
+; Cyclic permute pointers betwee the three copies
+002072 010003 ;        MOV R0,R3
+002074 010100 ;        MOV R1,R0
+002076 010201 ;        MOV R2,R1
+002100 010302 ;        MOV R3,R2
+
+; Jump to next copy
+002102 010007 ;        MOV R0,PC
