@@ -25,3 +25,6 @@ The EMON monitor is set up with five commands:
 ```
 000207 RTS PC
 ```
+
+## slfcor
+A simple example of triple-copy error correcting, self modifying code.  Can correct errored bytes in some portions of itself as it runs.
