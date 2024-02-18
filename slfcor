@@ -1,7 +1,7 @@
 ;; Self correcting code
 
 ; Load this code into 001000-001102 and 002000-002102
-; Set R0=001000, R2=002000, R3=003000, start at 001000
+; Set R0=001000, R1=002000, R2=003000, start at 001000
 
 ; ECC computation
 001000 111003 ; Start: MOVB(R0),R3 ; R3=A
